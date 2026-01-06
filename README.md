@@ -184,5 +184,36 @@ Exceções ficam restritas ao domínio.
 
 ---
 
-## 🗂 Estrutura de Pastas (Sugestão)
+## 🎯 Objetivo do Projeto
+
+Este projeto **não** tem como objetivo:
+- ser completo
+- ser produtivo
+- usar frameworks modernos
+
+Ele existe para:
+- treinar modelagem de domínio
+- reforçar fundamentos arquiteturais
+- praticar separação de responsabilidades
+- evitar domínio anêmico
+- evitar services genéricos
+
+---
+
+## 🧠 Aprendizados Esperados
+
+Ao finalizar este projeto, espera-se compreender melhor:
+- quando usar Value Object
+- quando lançar Exception vs retornar Result
+- como separar regra de negócio de orquestração
+- como modelar comportamento no domínio
+- como estruturar um projeto orientado ao domínio
+
+---
+
+## 🧾 Observação Final
+
+> **Projetos pequenos são ideais para treinar arquitetura.  
+Projetos grandes apenas evidenciam a falta dela.**
+
 
