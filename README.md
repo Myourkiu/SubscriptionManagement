@@ -198,22 +198,4 @@ Ele existe para:
 - evitar domínio anêmico
 - evitar services genéricos
 
----
-
-## 🧠 Aprendizados Esperados
-
-Ao finalizar este projeto, espera-se compreender melhor:
-- quando usar Value Object
-- quando lançar Exception vs retornar Result
-- como separar regra de negócio de orquestração
-- como modelar comportamento no domínio
-- como estruturar um projeto orientado ao domínio
-
----
-
-## 🧾 Observação Final
-
-> **Projetos pequenos são ideais para treinar arquitetura.  
-Projetos grandes apenas evidenciam a falta dela.**
-
 
