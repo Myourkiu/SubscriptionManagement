@@ -1,0 +1,6 @@
+@SubscriptionManagement.Api_HostAddress = http://localhost:5151
+
+GET {{SubscriptionManagement.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
