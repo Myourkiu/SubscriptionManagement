@@ -265,22 +265,6 @@ dotnet ef migrations add NomeDaMigration --project src/SubscriptionManagement.In
 dotnet ef database update --project src/SubscriptionManagement.Infrastructure --startup-project src/SubscriptionManagement.Api
 ```
 
-### Schema
-
-#### Tabela `Plans`
-
-- `Id` (uuid, PK)
-- `Name` (varchar(200), not null)
-- `DurationInDays` (integer, not null)
-
-#### Tabela `Subscriptions`
-
-- `Id` (uuid, PK)
-- `PlanId` (uuid, FK -> Plans.Id)
-- `StartDate` (timestamp with time zone, not null)
-- `EndDate` (timestamp with time zone, not null)
-- `Status` (integer, not null) - Armazenado como int (enum)
-
 ---
 
 ## 🌐 API Endpoints
