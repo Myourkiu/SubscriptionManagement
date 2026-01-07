@@ -315,6 +315,7 @@ cd SubscriptionManagement
 ```
 
 2. **Configure a connection string**
+
 Edite `src/SubscriptionManagement.Api/appsettings.Development.json` com suas credenciais do PostgreSQL.
 
 3. **Aplique as migrations**
