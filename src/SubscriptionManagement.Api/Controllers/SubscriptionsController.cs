@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using SubscriptionManagement.Domain.Models;
+using SubscriptionManagement.Application.DTOs;
+using SubscriptionManagement.Domain.Common;
+using SubscriptionManagement.Infrastructure.Services;
 
 namespace SubscriptionManagement.Api.Controllers;
 
@@ -7,19 +9,31 @@ namespace SubscriptionManagement.Api.Controllers;
 [Route("api/[controller]")]
 public class SubscriptionsController : ControllerBase
 {
-    private static readonly List<Subscription> _subscriptions = new()
-    {
-        new Subscription { Id = 1, Name = "Plano Básico", Price = 29.90m, DurationDays = 30, IsActive = true },
-        new Subscription { Id = 2, Name = "Plano Premium", Price = 99.90m, DurationDays = 30, IsActive = true },
-        new Subscription { Id = 3, Name = "Plano Anual", Price = 999.90m, DurationDays = 365, IsActive = true }
-    };
+    private readonly SubscriptionService _subscriptionService;
 
-    /// <summary>
-    /// Obtém todas as assinaturas
-    /// </summary>
-    [HttpGet]
-    public IActionResult GetAll()
+    public SubscriptionsController(SubscriptionService subscriptionService)
     {
-        return Ok(_subscriptions);
+        _subscriptionService = subscriptionService;
     }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAll([FromQuery] GetSubscriptionsRequest? request)
+    {
+        var subscriptions = await _subscriptionService.GetAllAsync(request);
+        return Ok(subscriptions);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Create([FromBody] CreateSubscriptionRequest request)
+    {
+        var result = await _subscriptionService.CreateAsync(request);
+        
+        if (result.IsFailure)
+        {
+            return BadRequest(new { error = result.Error });
+        }
+        
+        return Ok(result.Value);
+    }
+
 }

@@ -1,18 +1,21 @@
 using Microsoft.EntityFrameworkCore;
 using SubscriptionManagement.Infrastructure.Data;
+using SubscriptionManagement.Infrastructure.Repositories;
+using SubscriptionManagement.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Configuração do PostgreSQL
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(connectionString));
+
+builder.Services.AddScoped<SubscriptionRepository>();
+builder.Services.AddScoped<PlanRepository>();
+builder.Services.AddScoped<SubscriptionService>();
 
 var app = builder.Build();
 

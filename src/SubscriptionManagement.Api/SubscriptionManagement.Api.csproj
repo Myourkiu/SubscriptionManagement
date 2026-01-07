@@ -18,6 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\SubscriptionManagement.Domain\SubscriptionManagement.Domain.csproj" />
     <ProjectReference Include="..\SubscriptionManagement.Infrastructure\SubscriptionManagement.Infrastructure.csproj" />
+    <ProjectReference Include="..\SubscriptionManagement.Application\SubscriptionManagement.Application.csproj" />
   </ItemGroup>
 
 </Project>

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SubscriptionManagement.Infrastructure.Data;
@@ -11,9 +12,11 @@ using SubscriptionManagement.Infrastructure.Data;
 namespace SubscriptionManagement.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260107004327_UpdateSubscriptionModelV2")]
+    partial class UpdateSubscriptionModelV2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,54 +27,53 @@ namespace SubscriptionManagement.Infrastructure.Migrations
 
             modelBuilder.Entity("SubscriptionManagement.Domain.Models.Subscription", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
+                        .HasColumnType("integer");
 
-                    b.Property<Guid>("PlanId")
-                        .HasColumnType("uuid");
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("Status")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PlanId");
-
                     b.ToTable("Subscriptions");
-                });
-
-            modelBuilder.Entity("SubscriptionManagement.Domain.ValueObjects.Plan", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("DurationInDays")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Plans");
                 });
 
             modelBuilder.Entity("SubscriptionManagement.Domain.Models.Subscription", b =>
                 {
-                    b.HasOne("SubscriptionManagement.Domain.ValueObjects.Plan", "Plan")
-                        .WithMany()
-                        .HasForeignKey("PlanId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.OwnsOne("SubscriptionManagement.Domain.ValueObjects.Plan", "Plan", b1 =>
+                        {
+                            b1.Property<int>("SubscriptionId")
+                                .HasColumnType("integer");
+
+                            b1.Property<int>("DurationInDays")
+                                .HasColumnType("integer")
+                                .HasColumnName("PlanDurationInDays");
+
+                            b1.Property<int>("Id")
+                                .HasColumnType("integer")
+                                .HasColumnName("PlanId");
+
+                            b1.Property<string>("Name")
+                                .IsRequired()
+                                .HasMaxLength(200)
+                                .HasColumnType("character varying(200)")
+                                .HasColumnName("PlanName");
+
+                            b1.HasKey("SubscriptionId");
+
+                            b1.ToTable("Subscriptions");
+
+                            b1.WithOwner()
+                                .HasForeignKey("SubscriptionId");
+                        });
 
                     b.OwnsOne("SubscriptionManagement.Domain.ValueObjects.SubscriptionPeriod", "Period", b1 =>
                         {
-                            b1.Property<Guid>("SubscriptionId")
-                                .HasColumnType("uuid");
+                            b1.Property<int>("SubscriptionId")
+                                .HasColumnType("integer");
 
                             b1.Property<DateTime>("EndDate")
                                 .HasColumnType("timestamp with time zone")
@@ -92,7 +94,8 @@ namespace SubscriptionManagement.Infrastructure.Migrations
                     b.Navigation("Period")
                         .IsRequired();
 
-                    b.Navigation("Plan");
+                    b.Navigation("Plan")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

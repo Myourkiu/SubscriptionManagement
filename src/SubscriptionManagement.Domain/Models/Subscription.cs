@@ -1,10 +1,29 @@
+using SubscriptionManagement.Domain.ValueObjects;
+
 namespace SubscriptionManagement.Domain.Models;
 
 public class Subscription
 {
-    public int Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public decimal Price { get; set; }
-    public int DurationDays { get; set; }
-    public bool IsActive { get; set; } = true;
+    public Guid Id { get; set; }
+    public Plan Plan { get; set; }
+    public SubscriptionPeriod Period { get; set; }
+    public SubscriptionStatus Status { get; set; }
+
+    public void Cancel()
+    {
+        this.Status = SubscriptionStatus.Canceled;
+    }
+
+    public void Expire()
+    {
+        this.Status = SubscriptionStatus.Expired;
+    }
+
+    public bool IsActive()
+    {
+        if(this.Status != SubscriptionStatus.Active || this.Period.EndDate < DateTime.Now)
+            return false;
+        
+        return true;
+    }
 }
