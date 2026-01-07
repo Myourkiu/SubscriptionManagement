@@ -29,16 +29,16 @@ namespace SubscriptionManagement.Infrastructure.Repositories
             {
                 if (filters.StartDate.HasValue)
                 {
-                    var startDateUtc = filters.StartDate.Value.Kind == DateTimeKind.Utc 
-                        ? filters.StartDate.Value 
+                    var startDateUtc = filters.StartDate.Value.Kind == DateTimeKind.Utc
+                        ? filters.StartDate.Value
                         : filters.StartDate.Value.ToUniversalTime();
                     query = query.Where(s => s.Period.StartDate >= startDateUtc);
                 }
 
                 if (filters.EndDate.HasValue)
                 {
-                    var endDateUtc = filters.EndDate.Value.Kind == DateTimeKind.Utc 
-                        ? filters.EndDate.Value 
+                    var endDateUtc = filters.EndDate.Value.Kind == DateTimeKind.Utc
+                        ? filters.EndDate.Value
                         : filters.EndDate.Value.ToUniversalTime();
                     query = query.Where(s => s.Period.EndDate <= endDateUtc);
                 }
@@ -57,6 +57,29 @@ namespace SubscriptionManagement.Infrastructure.Repositories
             _context.Subscriptions.Add(subscription);
             await _context.SaveChangesAsync();
             return subscription;
+        }
+
+        public async Task ExpireSubscriptionsAsync()
+        {
+            var now = DateTime.UtcNow;
+            var activeSubscriptions = await _context.Subscriptions
+                .Where(s => s.Status == SubscriptionStatus.Active)
+                .ToListAsync();
+
+            bool hasChanges = false;
+            foreach (var subscription in activeSubscriptions)
+            {
+                if (subscription.Period.EndDate < now)
+                {
+                    subscription.Expire();
+                    hasChanges = true;
+                }
+            }
+
+            if (hasChanges)
+            {
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

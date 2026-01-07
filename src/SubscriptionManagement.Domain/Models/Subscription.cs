@@ -21,9 +21,6 @@ public class Subscription
 
     public bool IsActive()
     {
-        if (this.Status != SubscriptionStatus.Active || this.Period.EndDate < DateTime.Now)
-            return false;
-
-        return true;
+        return Status == SubscriptionStatus.Active;
     }
 }

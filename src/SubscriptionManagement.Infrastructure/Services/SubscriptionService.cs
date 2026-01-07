@@ -19,6 +19,7 @@ namespace SubscriptionManagement.Infrastructure.Services
 
         public async Task<List<Subscription>> GetAllAsync(GetSubscriptionsRequest? filters = null)
         {
+            await _subscriptionRepository.ExpireSubscriptionsAsync();
             return await _subscriptionRepository.GetAllAsync(filters);
         }
 
