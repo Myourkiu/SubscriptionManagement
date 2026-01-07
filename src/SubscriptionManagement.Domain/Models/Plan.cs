@@ -1,9 +1,8 @@
-using SubscriptionManagement.Domain.Common;
 using SubscriptionManagement.Domain.Exceptions;
 
-namespace SubscriptionManagement.Domain.ValueObjects;
+namespace SubscriptionManagement.Domain.Models;
 
-public class Plan : ValueObject
+public class Plan
 {
     public Guid Id { get; set; }
     public string Name { get; private set; } = string.Empty;
@@ -27,12 +26,5 @@ public class Plan : ValueObject
         {
             throw new DomainException("Duração do plano deve ser maior que 0");
         }
-    }
-
-    protected override IEnumerable<object> GetEqualityComponents()
-    {
-        yield return Id;
-        yield return Name;
-        yield return DurationInDays;
     }
 }

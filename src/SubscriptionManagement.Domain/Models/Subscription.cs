@@ -5,8 +5,8 @@ namespace SubscriptionManagement.Domain.Models;
 public class Subscription
 {
     public Guid Id { get; set; }
-    public Plan Plan { get; set; }
-    public SubscriptionPeriod Period { get; set; }
+    public Plan Plan { get; set; } = null!;
+    public SubscriptionPeriod Period { get; set; } = null!;
     public SubscriptionStatus Status { get; set; }
 
     public void Cancel()
@@ -21,9 +21,9 @@ public class Subscription
 
     public bool IsActive()
     {
-        if(this.Status != SubscriptionStatus.Active || this.Period.EndDate < DateTime.Now)
+        if (this.Status != SubscriptionStatus.Active || this.Period.EndDate < DateTime.Now)
             return false;
-        
+
         return true;
     }
 }

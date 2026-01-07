@@ -1,5 +1,5 @@
 using SubscriptionManagement.Infrastructure.Data;
-using SubscriptionManagement.Domain.ValueObjects;
+using SubscriptionManagement.Domain.Models;
 
 namespace SubscriptionManagement.Infrastructure.Repositories
 {
