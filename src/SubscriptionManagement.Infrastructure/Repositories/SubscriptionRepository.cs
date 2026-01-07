@@ -59,6 +59,13 @@ namespace SubscriptionManagement.Infrastructure.Repositories
             return subscription;
         }
 
+        public async Task<Subscription> UpdateAsync(Subscription subscription)
+        {
+            _context.Subscriptions.Update(subscription);
+            await _context.SaveChangesAsync();
+            return subscription;
+        }
+
         public async Task ExpireSubscriptionsAsync()
         {
             var now = DateTime.UtcNow;

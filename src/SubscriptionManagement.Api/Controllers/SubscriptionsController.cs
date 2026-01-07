@@ -36,4 +36,17 @@ public class SubscriptionsController : ControllerBase
         return Ok(result.Value);
     }
 
+    [HttpPatch("{id}/cancel")]
+    public async Task<IActionResult> Cancel(Guid id)
+    {
+        var result = await _subscriptionService.CancelAsync(id);
+
+        if (result.IsFailure)
+        {
+            return BadRequest(new { error = result.Error });
+        }
+
+        return Ok(result.Value);
+    }
+
 }

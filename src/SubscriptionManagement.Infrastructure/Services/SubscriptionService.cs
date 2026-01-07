@@ -28,9 +28,9 @@ namespace SubscriptionManagement.Infrastructure.Services
             try
             {
                 var existingSubscriptions = await _subscriptionRepository.GetAllAsync();
-                if (existingSubscriptions.Any())
+                if (existingSubscriptions.FirstOrDefault(s => s.IsActive()) != null)
                 {
-                    return Result<Subscription>.Failure("Já existe uma assinatura. Não é permitido criar outra");
+                    return Result<Subscription>.Failure("Não é permitido ativar uma nova assinatura quando já existe uma ativa");
                 }
 
                 var plan = await _planRepository.GetByIdAsync(request.PlanId);
@@ -54,6 +54,31 @@ namespace SubscriptionManagement.Infrastructure.Services
             catch (Exception ex)
             {
                 return Result<Subscription>.Failure($"Erro ao criar assinatura: {ex.Message}");
+            }
+        }
+
+        public async Task<Result<Subscription>> CancelAsync(Guid id)
+        {
+            try
+            {
+                var subscription = await _subscriptionRepository.GetByIdAsync(id);
+                if (subscription == null)
+                {
+                    return Result<Subscription>.Failure("Assinatura não encontrada");
+                }
+
+                if (subscription.Status == SubscriptionStatus.Canceled)
+                {
+                    return Result<Subscription>.Failure("Assinatura já está cancelada");
+                }
+
+                subscription.Cancel();
+                var updatedSubscription = await _subscriptionRepository.UpdateAsync(subscription);
+                return Result<Subscription>.Success(updatedSubscription);
+            }
+            catch (Exception ex)
+            {
+                return Result<Subscription>.Failure($"Erro ao cancelar assinatura: {ex.Message}");
             }
         }
     }
