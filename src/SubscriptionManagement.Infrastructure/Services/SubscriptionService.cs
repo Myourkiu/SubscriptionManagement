@@ -26,12 +26,19 @@ namespace SubscriptionManagement.Infrastructure.Services
         {
             try
             {
-                var plan = new Plan(name: request.PlanName, durationInDays: request.DurationInDays);
+                var existingSubscriptions = await _subscriptionRepository.GetAllAsync();
+                if (existingSubscriptions.Any())
+                {
+                    return Result<Subscription>.Failure("Já existe uma assinatura. Não é permitido criar outra");
+                }
 
-                await _planRepository.CreateAsync(plan);
+                var plan = await _planRepository.GetByIdAsync(request.PlanId);
+                if (plan == null)
+                {
+                    return Result<Subscription>.Failure("Plano não encontrado");
+                }
 
-                var period = new SubscriptionPeriod(DateTime.UtcNow, DateTime.UtcNow.AddDays(request.DurationInDays));
-
+                var period = new SubscriptionPeriod(DateTime.UtcNow, DateTime.UtcNow.AddDays(plan.DurationInDays));
 
                 var subscription = new Subscription
                 {
@@ -43,7 +50,6 @@ namespace SubscriptionManagement.Infrastructure.Services
                 var createdSubscription = await _subscriptionRepository.CreateAsync(subscription);
                 return Result<Subscription>.Success(createdSubscription);
             }
-
             catch (Exception ex)
             {
                 return Result<Subscription>.Failure($"Erro ao criar assinatura: {ex.Message}");

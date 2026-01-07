@@ -27,12 +27,12 @@ public class SubscriptionsController : ControllerBase
     public async Task<IActionResult> Create([FromBody] CreateSubscriptionRequest request)
     {
         var result = await _subscriptionService.CreateAsync(request);
-        
+
         if (result.IsFailure)
         {
             return BadRequest(new { error = result.Error });
         }
-        
+
         return Ok(result.Value);
     }
 

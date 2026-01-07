@@ -16,6 +16,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddScoped<SubscriptionRepository>();
 builder.Services.AddScoped<PlanRepository>();
 builder.Services.AddScoped<SubscriptionService>();
+builder.Services.AddScoped<PlanService>();
 
 var app = builder.Build();
 
